@@ -57,17 +57,32 @@ class Hand
 
   def initialize
     @cards_in_hand = []
+    @total = 0
   end
 
   def add_to_hand(dealt_card)
     @cards_in_hand.push(dealt_card)
   end
+
+  def calc_total
+    @cards_in_hand.map do |value|
+      if value.to_i > 10
+        if value.to_i == 14
+          value = 11
+        else
+          value = 10
+        end
+      end
+      @total += value.to_i
+    end
+    @total
+  end
 end
 
-class Player < Hand
+class Player
 end
 
-class Dealer < Hand
+class Dealer
 end
 
 deck = Deck.new
@@ -82,11 +97,16 @@ player.add_to_hand(deck.deal_card)
 dealer.add_to_hand(deck.deal_card)
 player.add_to_hand(deck.deal_card)
 dealer.add_to_hand(deck.deal_card)
+
+puts "Remaining in deck:"
+puts deck.display_deck
+puts
 puts "Player hand:"
 puts player.cards_in_hand
 puts
 puts "Dealer hand:"
 puts dealer.cards_in_hand
 puts
-puts "Remaining in deck:"
-puts deck.display_deck
+
+puts player.calc_total
+puts dealer.calc_total
