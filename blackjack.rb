@@ -1,33 +1,9 @@
-class Deck
-  def initialize
-    @cards = []
-  end
-
-  def make_deck
-    #... snip
-    suits = [:hearts, :diamonds, :spades, :clubs]
-    suits.each do |suit|
-      (2..14).each do |value|
-        @cards << Card.new(suit, value)
-      end
-    end
-  end
-
-  def shuffle_cards
-    @cards.shuffle!
-  end
-
-  def deal_card
-    @cards.shift.display_card
-  end
-
-  def display_deck
-    @cards.map do |card|
-      card.display_card
-    end
-  end
-end
-
+### todo
+# - create a class to hold deck
+#   - 52 cards, 4 suits - cards range from 2-10, also J, Q, K (10), and A (11)
+# - create a class to represent each card
+# - create a game class to play the game
+# - player class?
 class Card
   attr_reader :suit, :value
 
@@ -52,12 +28,43 @@ class Card
   end
 end
 
+class Deck
+  def initialize
+    @cards = []
+    #... snip
+    suits = [:hearts, :diamonds, :spades, :clubs]
+    suits.each do |suit|
+      (2..14).each do |value|
+        @cards << Card.new(suit, value)
+      end
+    end
+  end
+
+  def count
+    @cards.count
+  end
+
+  def shuffle_cards
+    @cards.shuffle!
+  end
+
+  def deal_card
+    @cards.shift.display_card
+  end
+
+  def display_deck
+    @cards.map do |card|
+      card.display_card
+    end
+  end
+end
+
 class Hand
   attr_accessor :cards_in_hand
 
   def initialize
     @cards_in_hand = []
-    @total = 0
+    # @total = 0
   end
 
   def add_to_hand(dealt_card)
@@ -65,6 +72,7 @@ class Hand
   end
 
   def calc_total
+    total = 0
     @cards_in_hand.map do |value|
       if value.to_i > 10
         if value.to_i == 14
@@ -73,40 +81,99 @@ class Hand
           value = 10
         end
       end
-      @total += value.to_i
+      total += value.to_i
     end
-    @total
+    total
   end
 end
 
-class Player
+# # Not super necessary - keep track of wins, etc.
+# class Player
+# end
+#
+# class Dealer
+# end
+
+class Game
+  def play
+    deck = Deck.new
+    deck.shuffle_cards
+
+    player = Hand.new
+    dealer = Hand.new
+
+    puts "Initial deck (shuffled):"
+    puts deck.display_deck
+    puts
+
+    2.times do
+      player.add_to_hand(deck.deal_card)
+      dealer.add_to_hand(deck.deal_card)
+    end
+    # player.add_to_hand(deck.deal_card)
+    # dealer.add_to_hand(deck.deal_card)
+
+    puts "Remaining in deck:"
+    puts deck.display_deck
+    puts
+    puts "Player hand:"
+    puts player.cards_in_hand
+    puts
+    puts "Dealer hand:"
+    puts dealer.cards_in_hand
+    puts
+
+    puts "remaining in deck: #{deck.count}"
+
+    puts "player total: #{player.calc_total}"
+    puts "dealer total: #{dealer.calc_total}"
+    # todo - check for dealer having blackjack too
+    if player.calc_total == 21
+      puts "Blackjack! Player wins"
+    elsif player.calc_total < 21
+      puts "Would you like to hit or stay?"
+      print "<Please enter 'h' or 's':> "
+      hit_or_stay = gets.chomp.upcase
+      if hit_or_stay == 'H'
+        # draw another card
+        player.add_to_hand(deck.deal_card)
+        puts player.cards_in_hand
+        puts "player total: #{player.calc_total}"
+
+        # let dealer finish
+        if dealer.calc_total < 16
+          dealer.add_to_hand(deck.deal_card)
+          puts "dealer total: #{dealer.calc_total}"
+        elsif dealer.calc_total < 21
+          puts "dealer total: #{dealer.calc_total}"
+        elsif dealer.calc_total == 21
+          puts "Dealer has Blackjack! Sorry, you lose!"
+        else
+          puts "Dealer busts! You win!"
+        end
+
+      elsif hit_or_stay == "S"
+        puts "player total: #{player.calc_total}"
+
+        # let dealer finish
+        if dealer.calc_total < 16
+          dealer.add_to_hand(deck.deal_card)
+          puts "dealer total: #{dealer.calc_total}"
+        elsif dealer.calc_total < 21
+          puts "dealer total: #{dealer.calc_total}"
+        elsif dealer.calc_total == 21
+          puts "Dealer has Blackjack! Sorry, you lose!"
+        else
+          puts "Dealer busts! You win!"
+        end
+
+      else
+        puts "Sorry? We're going to need to start over."
+      end
+    else
+      puts "Bust! Dealer wins."
+    end
+  end
 end
 
-class Dealer
-end
-
-deck = Deck.new
-deck.make_deck
-deck.shuffle_cards
-puts "shuffled deck: #{deck.display_deck}"
-puts
-player = Hand.new
-dealer = Hand.new
-
-player.add_to_hand(deck.deal_card)
-dealer.add_to_hand(deck.deal_card)
-player.add_to_hand(deck.deal_card)
-dealer.add_to_hand(deck.deal_card)
-
-puts "Remaining in deck:"
-puts deck.display_deck
-puts
-puts "Player hand:"
-puts player.cards_in_hand
-puts
-puts "Dealer hand:"
-puts dealer.cards_in_hand
-puts
-
-puts player.calc_total
-puts dealer.calc_total
+Game.new.play
