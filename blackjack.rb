@@ -75,22 +75,20 @@ class Game
     player_input = gets.chomp.upcase
   end
 
-  def card_corrector(cards)
-    cards.each do |card|
-      if card[0..1].to_i > 10
-        card_strings = card.split
-        if card_strings[0] == "11"
-          card_strings[0] = "J"
-        elsif card_strings[0] == "12"
-          card_strings[0] = "Q"
-        elsif card_strings[0] == "13"
-          card_strings[0] = "K"
-        else card_strings[0] = "A"
-        end
-        card = card_strings.join(" ")
+  def card_corrector(card)
+    if card[0..1].to_i > 10
+      card_strings = card.split
+      if card_strings[0] == "11"
+        card_strings[0] = "J"
+      elsif card_strings[0] == "12"
+        card_strings[0] = "Q"
+      elsif card_strings[0] == "13"
+        card_strings[0] = "K"
+      else card_strings[0] = "A"
       end
-      puts card
+      card = card_strings.join(" ")
     end
+    puts card
   end
 
   def play
@@ -108,13 +106,15 @@ class Game
     puts "Player hand:"
     # sleep(1)
     # puts player.cards_in_hand
-    card_corrector(player.cards_in_hand)
+    player.cards_in_hand.each do |card|
+      card_corrector(card)
+    end
     puts
     # sleep(1)
     puts "Dealer hand:"
     # sleep(1)
     puts "unknown"
-    puts dealer.cards_in_hand[1]
+    card_corrector(dealer.cards_in_hand[1])
     puts
     # sleep(1)
     puts "Player's total: #{player.calc_total}"
@@ -125,7 +125,9 @@ class Game
     if player.calc_total == 21
       puts "Blackjack! You win!"
       puts "Player's hand: #{player.cards_in_hand}"
-      puts card_corrector(player.cards_in_hand)
+      player.cards_in_hand.each do |card|
+        card_corrector(card)
+      end
     elsif player.calc_total > 21
       puts "Bust! Dealer wins!"
     elsif dealer.calc_total == 21
@@ -146,7 +148,7 @@ class Game
             player.add_to_hand(deck.deal_card)
             puts "Player hits."
             # sleep(0.5)
-            puts player.cards_in_hand.last
+            puts card_corrector(player.cards_in_hand.last)
             # sleep(0.5)
           elsif hit_or_stay == "S"
             time_to_break = true
@@ -171,7 +173,7 @@ class Game
           if dealer.calc_total < 16
             dealer.add_to_hand(deck.deal_card)
             puts "Dealer hits."
-            puts dealer.cards_in_hand.last
+            puts card_corrector(dealer.cards_in_hand.last)
           elsif dealer.calc_total < 21
             puts "Dealer stays."
             break
@@ -186,11 +188,15 @@ class Game
       end
 
       puts
-      puts "Player's final hand: #{player.cards_in_hand}"
-      card_corrector(player.cards_in_hand)
+      puts "Player's final hand:"
+      player.cards_in_hand.each do |card|
+        card_corrector(card)
+      end
       puts
-      puts "Dealer's final hand: #{dealer.cards_in_hand}"
-      card_corrector(dealer.cards_in_hand)
+      puts "Dealer's final hand:"
+      dealer.cards_in_hand.each do |card|
+        card_corrector(card)
+      end
       puts
       puts "Player's final total: #{player.calc_total}"
       puts "Dealer's final total: #{dealer.calc_total}"
