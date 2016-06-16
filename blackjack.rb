@@ -237,9 +237,9 @@ loop do
     Game.new.play
   elsif user_input == "N"
     if looped
-      puts "Come back when you've got some money, buddy."
+      puts "Come back when you've got some money, buddy!"
     else
-      puts "Come back if you've got what it takes."
+      puts "Come back if you think you've got what it takes!"
     end
     break
   end
