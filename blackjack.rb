@@ -1,9 +1,3 @@
-### todo
-# - create a class to hold deck
-#   - 52 cards, 4 suits - cards range from 2-10, also J, Q, K (10), and A (11)
-# - create a class to represent each card
-# - create a game class to play the game
-# - player class?
 class Card
   attr_reader :suit, :value
 
@@ -13,17 +7,6 @@ class Card
   end
 
   def display_card
-    # # convert values to string representations (A, K, Q, & J)
-    # if @value > 13
-    #   @value = 'A'
-    # elsif @value == 11
-    #   @value = 'J'
-    # elsif @value == 12
-    #   @value = 'Q'
-    # elsif @value == 13
-    #   @value = 'K'
-    # else
-    # end
     "#{@value} of #{@suit}"
   end
 end
@@ -31,7 +14,6 @@ end
 class Deck
   def initialize
     @cards = []
-    #... snip
     suits = [:hearts, :diamonds, :spades, :clubs]
     suits.each do |suit|
       (2..14).each do |value|
@@ -64,7 +46,6 @@ class Hand
 
   def initialize
     @cards_in_hand = []
-    # @total = 0
   end
 
   def add_to_hand(dealt_card)
@@ -86,13 +67,6 @@ class Hand
     total
   end
 end
-
-# Not super necessary - keep track of wins, etc.
-# class Player
-# end
-#
-# class Dealer
-# end
 
 class Game
   def get_player_input
@@ -153,10 +127,7 @@ class Game
       puts "Dealer busts! You win!"
     else
       time_to_break = false
-      # loop to let player "hit" (draw card) infinitely until:, "blackjack", or "bust"
-      #   - user chooses to stop (stay)
-      #   - user has 21 (stay)
-      #   - user has over 21 (bust)
+      # loop forever (hit) until player stays, blackjacks, or busts
       loop do
         if time_to_break
           break
@@ -180,7 +151,7 @@ class Game
         puts
       end
 
-      # loop to finish dealer hand based on their total
+      # loop to finish dealer's drawing based on total
       if player.calc_total < 21
         loop do
           if dealer.calc_total < 16
