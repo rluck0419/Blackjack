@@ -143,6 +143,7 @@ class Game
         elsif player.calc_total < 21
           puts "Cards remaining in deck: #{deck.count}"
           hit_or_stay = get_player_input
+          puts
           # hit if the player_input == H
           if hit_or_stay == "H"
             player.add_to_hand(deck.deal_card)
@@ -162,7 +163,6 @@ class Game
           puts "Bust! Dealer wins!"
           break
         end
-        puts
         puts "Player's total: #{player.calc_total}"
         puts
       end
@@ -225,7 +225,7 @@ looped = false
 
 loop do
   if looped
-    puts "\nWould you like to play again?"
+    puts "Would you like to play again?"
   end
 
   print "<Please enter 'Y' or 'N':> "
@@ -233,6 +233,7 @@ loop do
   if user_input == "Y"
     puts
     puts "Shuffle up and deal!"
+    puts
     # sleep(1)
     Game.new.play
   elsif user_input == "N"
