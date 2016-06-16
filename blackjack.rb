@@ -87,9 +87,9 @@ class Hand
   end
 end
 
-# # Not super necessary - keep track of wins, etc.
-# class Player
-# end
+# Not super necessary - keep track of wins, etc.
+class Player
+end
 #
 # class Dealer
 # end
@@ -102,31 +102,30 @@ class Game
     player = Hand.new
     dealer = Hand.new
 
-    puts "Initial deck (shuffled):"
-    puts deck.display_deck
-    puts
+    # puts "Initial deck (shuffled):"
+    # puts deck.display_deck
+    # puts
 
-    2.times do
-      player.add_to_hand(deck.deal_card)
-      dealer.add_to_hand(deck.deal_card)
-    end
-    # player.add_to_hand(deck.deal_card)
-    # dealer.add_to_hand(deck.deal_card)
+    player.add_to_hand(deck.deal_card)
+    dealer.add_to_hand(deck.deal_card)
+    player.add_to_hand(deck.deal_card)
+    dealer.add_to_hand(deck.deal_card)
 
-    puts "Remaining in deck:"
-    puts deck.display_deck
-    puts
+    # puts "Remaining in deck:"
+    # puts deck.display_deck
+    # puts
     puts "Player hand:"
     puts player.cards_in_hand
     puts
     puts "Dealer hand:"
-    puts dealer.cards_in_hand
+    puts dealer.cards_in_hand[0]
+    puts "unknown"
     puts
 
-    puts "remaining in deck: #{deck.count}"
+    puts "Cards remaining in deck: #{deck.count}"
 
-    puts "player total: #{player.calc_total}"
-    puts "dealer total: #{dealer.calc_total}"
+    puts "Player's total: #{player.calc_total}"
+    # puts "dealer total: #{dealer.calc_total}"
     # todo - check for dealer having blackjack too
     if player.calc_total == 21
       puts "Blackjack! Player wins"
@@ -134,22 +133,46 @@ class Game
       puts "Would you like to hit or stay?"
       print "<Please enter 'h' or 's':> "
       hit_or_stay = gets.chomp.upcase
+      puts
       if hit_or_stay == 'H'
         # draw another card
         player.add_to_hand(deck.deal_card)
-        puts player.cards_in_hand
+        puts "Players current hand:"
+        puts player.cards_in_hand[0]
+        puts player.cards_in_hand[1]
+        puts player.cards_in_hand[2]
+        puts
         puts "player total: #{player.calc_total}"
 
-        # let dealer finish
-        if dealer.calc_total < 16
-          dealer.add_to_hand(deck.deal_card)
-          puts "dealer total: #{dealer.calc_total}"
-        elsif dealer.calc_total < 21
-          puts "dealer total: #{dealer.calc_total}"
-        elsif dealer.calc_total == 21
-          puts "Dealer has Blackjack! Sorry, you lose!"
+        if player.calc_total > 21
+          puts "Bust! Dealer wins."
+        elsif player.calc_total == 21
+          puts "Blackjack! Player wins."
         else
-          puts "Dealer busts! You win!"
+          # let dealer finish
+          if dealer.calc_total < 16
+            puts
+            puts "dealer hits:"
+            dealer.add_to_hand(deck.deal_card)
+            puts dealer.cards_in_hand[2]
+            puts "dealer total: #{dealer.calc_total}"
+          elsif dealer.calc_total < 21
+            puts "dealer total: #{dealer.calc_total}"
+            if dealer.calc_total < player.calc_total
+              puts "Player's #{player.calc_total} beats the dealer's #{dealer.calc_total}. You win!"
+              puts
+            elsif dealer.calc_total > player.calc_total && player.calc_total < 22
+              puts "Sorry, the dealer's #{dealer.calc_total} beats player's #{player.calc_total}. You lose!"
+              puts
+            else
+              puts "Push! Player's #{player.calc_total} ties the dealer's #{dealer.calc_total}. Boring!"
+              puts
+            end
+          elsif dealer.calc_total == 21
+            puts "Dealer has Blackjack! Sorry, you lose!"
+          else
+            puts "Dealer busts! You win!"
+          end
         end
 
       elsif hit_or_stay == "S"
@@ -161,6 +184,16 @@ class Game
           puts "dealer total: #{dealer.calc_total}"
         elsif dealer.calc_total < 21
           puts "dealer total: #{dealer.calc_total}"
+          if dealer.calc_total < player.calc_total
+            puts "Player's #{player.calc_total} beats the dealer's #{dealer.calc_total}. You win!"
+            puts
+          elsif dealer.calc_total > player.calc_total && player.calc_total < 22
+            puts "Sorry, the dealer's #{dealer.calc_total} beats player's #{player.calc_total}. You lose!"
+            puts
+          else
+            puts "Push! Player's #{player.calc_total} ties the dealer's #{dealer.calc_total}. Boring!"
+            puts
+          end
         elsif dealer.calc_total == 21
           puts "Dealer has Blackjack! Sorry, you lose!"
         else
