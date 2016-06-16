@@ -9,6 +9,16 @@ class Card
   def display_card
     "#{@value} of #{@suit}"
   end
+
+  # def display_value
+  #   case @value
+  #   when 11 then "J"
+  #   when 12 then "Q"
+  #   when 13 then "K"
+  #   when 14 then "A"
+  #   else
+  #     @value
+  #   end
 end
 
 class Deck
@@ -157,7 +167,7 @@ class Game
           else puts "Sorry? Please try again."
           end
         elsif player.calc_total == 21
-          puts "Blackjack! You win!"
+          puts "Player has 21! You win!"
           break
         else
           puts "Bust! Dealer wins!"
@@ -178,7 +188,7 @@ class Game
             puts "Dealer stays."
             break
           elsif dealer.calc_total == 21
-            puts "Dealer has Blackjack! Sorry, you lose!"
+            puts "Dealer has 21! Sorry, you lose!"
             break
           else
             puts "Dealer busts! You win!"
