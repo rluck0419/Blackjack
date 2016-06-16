@@ -70,8 +70,8 @@ end
 
 class Game
   def get_player_input
-    puts "Would you like to hit or stay?"
-    print "<Please enter 'h' or 's'>: "
+    puts "Would you like to (h)it or (s)tay?"
+    print "<Please enter 'H' or 'S'>: "
     player_input = gets.chomp.upcase
   end
 
@@ -106,19 +106,26 @@ class Game
     end
 
     puts "Player hand:"
-    puts player.cards_in_hand
+    # sleep(1)
+    # puts player.cards_in_hand
+    card_corrector(player.cards_in_hand)
     puts
+    # sleep(1)
     puts "Dealer hand:"
+    # sleep(1)
     puts "unknown"
     puts dealer.cards_in_hand[1]
     puts
-    puts "Cards remaining in deck: #{deck.count}"
+    # sleep(1)
     puts "Player's total: #{player.calc_total}"
+    # sleep(1)
     puts
 
     # check if player/dealer wins on draw (or busts - aces are always high)
     if player.calc_total == 21
       puts "Blackjack! You win!"
+      puts "Player's hand: #{player.cards_in_hand}"
+      puts card_corrector(player.cards_in_hand)
     elsif player.calc_total > 21
       puts "Bust! Dealer wins!"
     elsif dealer.calc_total == 21
@@ -132,12 +139,18 @@ class Game
         if time_to_break
           break
         elsif player.calc_total < 21
+          puts "Cards remaining in deck: #{deck.count}"
           hit_or_stay = get_player_input
           # hit if the player_input == H
           if hit_or_stay == "H"
             player.add_to_hand(deck.deal_card)
+            puts "Player hits."
+            # sleep(0.5)
+            puts player.cards_in_hand.last
+            # sleep(0.5)
           elsif hit_or_stay == "S"
             time_to_break = true
+            puts "Player stays."
           else puts "Sorry? Please try again."
           end
         elsif player.calc_total == 21
@@ -147,6 +160,7 @@ class Game
           puts "Bust! Dealer wins!"
           break
         end
+        puts
         puts "Player's total: #{player.calc_total}"
         puts
       end
@@ -156,7 +170,10 @@ class Game
         loop do
           if dealer.calc_total < 16
             dealer.add_to_hand(deck.deal_card)
+            puts "Dealer hits."
+            puts dealer.cards_in_hand.last
           elsif dealer.calc_total < 21
+            puts "Dealer stays."
             break
           elsif dealer.calc_total == 21
             puts "Dealer has Blackjack! Sorry, you lose!"
@@ -169,14 +186,14 @@ class Game
       end
 
       puts
-      puts "Player's hand: #{player.cards_in_hand}"
+      puts "Player's final hand: #{player.cards_in_hand}"
       card_corrector(player.cards_in_hand)
       puts
-      puts "Dealer's hand: #{dealer.cards_in_hand}"
+      puts "Dealer's final hand: #{dealer.cards_in_hand}"
       card_corrector(dealer.cards_in_hand)
       puts
-      puts "Player's total: #{player.calc_total}"
-      puts "Dealer's total: #{dealer.calc_total}"
+      puts "Player's final total: #{player.calc_total}"
+      puts "Dealer's final total: #{dealer.calc_total}"
       puts
 
       # check results
@@ -193,4 +210,32 @@ class Game
   end
 end
 
-Game.new.play
+system('clear')
+puts "Welcome to the Blackjack Table."
+# sleep(1)
+puts "Would you like to play?"
+# sleep(1)
+looped = false
+
+loop do
+  if looped
+    puts "\nWould you like to play again?"
+  end
+
+  print "<Please enter 'Y' or 'N':> "
+  user_input = gets.chomp.upcase
+  if user_input == "Y"
+    puts
+    puts "Shuffle up and deal!"
+    # sleep(1)
+    Game.new.play
+  elsif user_input == "N"
+    if looped
+      puts "Come back when you've got some money, buddy."
+    else
+      puts "Come back if you've got what it takes."
+    end
+    break
+  end
+  looped = true
+end
